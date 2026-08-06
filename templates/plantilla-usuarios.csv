@@ -1,0 +1,3 @@
+cedula,nombre_completo,correo,rol,estado
+900000010,Docente de Prueba,docente.prueba@example.com,docente,activo
+900000011,Auxiliar de Prueba,auxiliar.prueba@example.com,auxiliar,activo

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net https://*.supabase.co wss://*.supabase.co; img-src 'self' data:; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <title>Nueva contraseña | CTP Cañas</title>
+  <link rel="icon" href="./assets/escudo-ctp-canas.webp" type="image/webp">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="reset-page">
+  <main class="reset-container">
+    <section class="auth-card" aria-labelledby="reset-title">
+      <img src="./assets/escudo-ctp-canas.webp" alt="Escudo del CTP Cañas" class="reset-crest">
+      <p class="eyebrow">Recuperación de acceso</p>
+      <h1 id="reset-title">Establecer nueva contraseña</h1>
+      <p class="muted">Utilice al menos 10 caracteres e incluya mayúscula, minúscula, número y símbolo.</p>
+      <form id="reset-form" novalidate>
+        <label for="new-password">Nueva contraseña</label>
+        <input id="new-password" type="password" autocomplete="new-password" required>
+        <label for="confirm-password">Confirmar contraseña</label>
+        <input id="confirm-password" type="password" autocomplete="new-password" required>
+        <button class="button button-primary button-full" type="submit">Guardar contraseña</button>
+      </form>
+      <div id="reset-message" class="notice hidden" role="status"></div>
+      <a href="./" class="link-button centered">Volver al inicio</a>
+    </section>
+  </main>
+  <script type="module" src="./js/reset.js"></script>
+</body>
+</html>
