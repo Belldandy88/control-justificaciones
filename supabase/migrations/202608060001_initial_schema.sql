@@ -17,6 +17,7 @@ exception when duplicate_object then null; end $$;
 create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
 grant usage on schema private to authenticated;
+grant usage on schema private to service_role;
 
 create or replace function private.normalize_search_text(input text)
 returns text
