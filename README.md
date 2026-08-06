@@ -23,7 +23,12 @@ Aplicación web para consultar, registrar y administrar justificaciones de ausen
 
 ## 1. Crear o seleccionar un proyecto Supabase
 
-Use un proyecto exclusivo para este sistema. No reutilice una base de producción de otra aplicación educativa.
+Proyecto exclusivo creado para este sistema:
+
+- Nombre: `ctp-canas-justificaciones`
+- Referencia: `fhmtoputyrwnyhfqzcin`
+- Región: `us-east-2`
+- Plan: Free
 
 Copie el identificador del proyecto y ajuste `project_id` en `supabase/config.toml`.
 

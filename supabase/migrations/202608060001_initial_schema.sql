@@ -118,8 +118,12 @@ create index if not exists students_search_key_idx on public.students using gin 
 create index if not exists students_section_year_idx on public.students (curso_lectivo, nivel, seccion) where activo;
 create index if not exists justifications_student_year_idx on public.absence_justifications (student_id, curso_lectivo, periodo, fecha_ausencia desc);
 create index if not exists justifications_year_idx on public.absence_justifications (curso_lectivo, fecha_ausencia desc);
+create index if not exists justifications_created_by_idx on public.absence_justifications (created_by);
+create index if not exists justifications_updated_by_idx on public.absence_justifications (updated_by);
 create index if not exists profiles_search_key_idx on public.profiles using gin (to_tsvector('simple', search_key));
 create index if not exists audit_created_at_idx on public.audit_logs (created_at desc);
+create index if not exists audit_user_id_idx on public.audit_logs (user_id);
+create index if not exists app_settings_updated_by_idx on public.app_settings (updated_by);
 
 create or replace function private.set_profile_search_key()
 returns trigger language plpgsql security invoker set search_path = '' as $$
@@ -159,7 +163,7 @@ set search_path = ''
 as $$
   select p.rol
   from public.profiles p
-  where p.id = auth.uid() and p.activo = true
+  where p.id = (select auth.uid()) and p.activo = true
   limit 1;
 $$;
 revoke all on function private.current_app_role() from public, anon;
@@ -209,7 +213,7 @@ alter table public.auth_rate_limits enable row level security;
 
 drop policy if exists profiles_read_own_or_admin on public.profiles;
 create policy profiles_read_own_or_admin on public.profiles for select to authenticated
-using (id = auth.uid() or private.current_app_role() = 'administrador');
+using (id = (select auth.uid()) or private.current_app_role() = 'administrador');
 
 drop policy if exists students_read_authenticated_staff on public.students;
 create policy students_read_authenticated_staff on public.students for select to authenticated
@@ -229,7 +233,7 @@ create policy justifications_read_staff on public.absence_justifications for sel
 using (private.current_app_role() is not null);
 drop policy if exists justifications_insert_aux_admin on public.absence_justifications;
 create policy justifications_insert_aux_admin on public.absence_justifications for insert to authenticated
-with check (private.current_app_role() in ('auxiliar','administrador') and created_by = auth.uid());
+with check (private.current_app_role() in ('auxiliar','administrador') and created_by = (select auth.uid()));
 drop policy if exists justifications_update_aux_admin on public.absence_justifications;
 create policy justifications_update_aux_admin on public.absence_justifications for update to authenticated
 using (private.current_app_role() in ('auxiliar','administrador'))
@@ -248,6 +252,10 @@ using (private.current_app_role() is not null);
 drop policy if exists settings_update_admin on public.app_settings;
 create policy settings_update_admin on public.app_settings for update to authenticated
 using (private.current_app_role() = 'administrador') with check (private.current_app_role() = 'administrador');
+
+drop policy if exists auth_rate_limits_deny_clients on public.auth_rate_limits;
+create policy auth_rate_limits_deny_clients on public.auth_rate_limits for all to anon, authenticated
+using (false) with check (false);
 
 revoke all on all tables in schema public from anon;
 revoke all on public.profiles, public.audit_logs, public.auth_rate_limits from authenticated;
